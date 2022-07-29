@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 const useWeb3 = ({ onMount = false } = {}) => {
     const [account, setAccount] = useState('')
     const [provider, setProvider] = useState<ethers.providers.Web3Provider>()
-    const [signer, setSigner] = useState()
+    const [signer, setSigner] = useState<ethers.providers.JsonRpcSigner>()
     const [isConnected, setIsConnected] = useState(false)
     // const [canConnect, setCanConnect] = useState(onMount);
 
@@ -46,7 +46,8 @@ const useWeb3 = ({ onMount = false } = {}) => {
     }
 
     const connect = async () => {
-        const auxProvider = detectProvider()
+        const auxProvider = detectProvider();
+        if (!auxProvider) return;
         await auxProvider.send("eth_requestAccounts", []);
         updateAccount(auxProvider);
     }
