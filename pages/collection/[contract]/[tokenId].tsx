@@ -5,7 +5,7 @@ import Modal from "../../../src/components/Modal";
 import ProductOverview from "../../../src/components/ProductOverview";
 import { MarketItemState } from "../../../src/constants";
 import ERC721 from '../../../src/contractABIs/ERC721.json'
-import { ListingsPageProps, MetadataProduct } from "../../../src/types";
+import { ListingsPageProps, MarketPlaceItem, MetadataProduct } from "../../../src/types";
 import { loadMetadata } from "../../../src/utils/metadata";
 import { approvalForAll, buyItem, newListing } from "../../../src/utils/productActions";
 
@@ -23,7 +23,7 @@ export default ({ marketplace, account, signer, listedItems, loadListedItems }: 
 
     const listItem = async (item: MetadataProduct) => {
         const contract = new ethers.Contract(item.contract, ERC721.abi, signer)
-        await newListing(item,contract,marketplace,account,price);
+        await newListing({item,contract,marketplace,account,price});
         await loadListedItems(marketplace);
     }
 
@@ -43,10 +43,11 @@ export default ({ marketplace, account, signer, listedItems, loadListedItems }: 
         const onClickHandler = async(e:SyntheticEvent) => {
             e.preventDefault();
             if (isListed && isOwner) {
-                await approvalForAll(contract,marketplace,account)
+                await approvalForAll({contract,marketplace,account})
                 await marketplace.cancelListing(item.itemId)
             }else if(isListed) {
-                await buyItem(contract,marketplace,account,item);
+                const auxItem = item as MarketPlaceItem;
+                await buyItem({contract,marketplace,account,item: auxItem});
                 loadProduct()
             }
             else {

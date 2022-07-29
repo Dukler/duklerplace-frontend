@@ -15,7 +15,8 @@ export type MarketPlaceItem = {
     itemId:number,
     price:number,
     seller:string,
-    state: MarketItemState
+    state: MarketItemState,
+    totalPrice:number
 }
 
 export type ComponentProps = {
@@ -37,7 +38,9 @@ export type MetadataType = {
     imageSrc: string,
     imageAlt: string,
     attributes?: Array<{trait_type:string,value:string}> | undefined,
-    contract: string
+    contract: string,
+    nft?:string,
+    state?: MarketItemState
 }
 
 
