@@ -34,7 +34,7 @@ export default ({ marketplace, account, signer, myListedItems, loadListedItems }
     const listItem = async (item: Product) => {
         const contract = new ethers.Contract(item.contract, ERC721.abi, signer)
         return await Promise.all([
-            await newListing(item, contract, marketplace, account, price),
+            await newListing({item, contract, marketplace, account, price}),
             await loadListedItems(marketplace)
         ])
         
