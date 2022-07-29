@@ -48,7 +48,7 @@ const Create = ({marketplace, nft, account} : ComponentProps) =>{
         await (await nft.mint(uri)).wait()
         const id = await nft.totalSupply()
         // await (await nft.setApprovalForAll(marketplace.address, true)).wait()
-        await approvalForAll(nft,marketplace,account);
+        await approvalForAll({contract:nft,marketplace,account});
         
         const listingPrice = ethers.utils.parseEther(state.price.toString())
         await (await marketplace.newListing(nft.address, id, listingPrice)).wait()
