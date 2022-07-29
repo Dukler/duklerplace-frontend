@@ -1,8 +1,8 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 type Props ={
-    setCurrentPage: (page:number)=>Promise<void>, 
+    setCurrentPage: Dispatch<SetStateAction<number>>, 
     currentPage: number, 
     length: number
 }
