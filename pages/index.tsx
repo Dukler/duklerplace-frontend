@@ -1,84 +1,67 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import { ethers } from 'ethers';
+import type { NextPage } from 'next';
+import { SyntheticEvent, useEffect, useState } from 'react';
+import ProductGrid from '../src/components/ProductGrid';
+import { MarketItemState } from '../src/constants';
+import ERC721 from '../src/contractABIs/ERC721.json'
+import { ComponentProps, MetadataType } from '../src/types';
+import { loadMetadata } from '../src/utils/metadata';
 
-const Home: NextPage = () => {
+
+
+const Home: NextPage<ComponentProps> = ({ marketplace, signer }) => {
+  const [items, setItems] = useState<Array<MetadataType>>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  
+  const loadMarketplaceItems = async () => {
+    let itemCount = 0
+    try{
+      itemCount = await marketplace.itemCount()
+    }
+    catch(err){
+      setLoading(false)
+      console.log('no marketplace')
+      return
+    }
+    let items:Array<MetadataType> = [];
+    for (let index = 1; index <= itemCount; index++) {
+      const item = await marketplace.items(index)
+      if (item.state === MarketItemState.Listed) {
+        const contract = new ethers.Contract(item.nft, ERC721.abi, signer)
+        items.push(
+          await loadMetadata({item,contract,marketplace})
+        )
+      }
+    }
+    
+    setItems(items)
+    setLoading(false)
+  }
+
+  const buyMarketItem = async (item:MetadataType, event:SyntheticEvent) => {
+    event.preventDefault();
+    await (await marketplace.purchaseItem(item.itemId, { value: item.totalPrice })).wait()
+    loadMarketplaceItems()
+  }
+
+  useEffect(() => {
+    loadMarketplaceItems()
+  }, [])
+
+  if (loading) return (
+    <main className='p-1'>
+      <h2>Loading...</h2>
+    </main>
+  )
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className="flex h-24 w-full items-center justify-center border-t">
-        <a
-          className="flex items-center justify-center gap-2"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </a>
-      </footer>
+    <div>
+      {items.length > 0 ? <ProductGrid items={items} onButtonClick={buyMarketItem}/> : (
+        <main className='p-1'>
+          <h2>No listed assets</h2>
+          {/* <ProductGrid/> */}
+        </main>
+      )}
     </div>
   )
 }
