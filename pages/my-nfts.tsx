@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
-import Modal from "../src/components/Modal";
+import Modal from "../src/components/PriceModal";
 import ProductGrid from "../src/components/ProductGrid";
 import ERC721 from '../src/contractABIs/ERC721.json'
 import { Item, ListingsPageProps, MetadataType } from "../src/types";

@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
-import Modal from "../../../src/components/Modal";
+import Modal from "../../../src/components/PriceModal";
 import ProductOverview from "../../../src/components/ProductOverview";
 import { MarketItemState } from "../../../src/constants";
 import ERC721 from '../../../src/contractABIs/ERC721.json'

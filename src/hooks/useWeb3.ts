@@ -8,6 +8,7 @@ const useWeb3 = ({ onMount = false } = {}) => {
     const [provider, setProvider] = useState<ethers.providers.Web3Provider>()
     const [signer, setSigner] = useState<ethers.providers.JsonRpcSigner>()
     const [isConnected, setIsConnected] = useState(false)
+    const [chainId, setChainId] = useState<number>()
     // const [canConnect, setCanConnect] = useState(onMount);
 
     const detectProvider = () => {
@@ -52,16 +53,27 @@ const useWeb3 = ({ onMount = false } = {}) => {
         updateAccount(auxProvider);
     }
 
+    const chainChange = async (provider? : ethers.providers.Web3Provider) =>{
+        const prov = provider ? provider : await detectProvider();
+        if(!prov) return;
+        const net = await prov.getNetwork();
+        const id = Number(net.chainId);
+        setChainId(id)
+    }
+
     useEffect(() => {
         detectProvider()
+        chainChange()
         if (onMount) connect()
         window.ethereum.on('accountsChanged', detectProvider)
+        window.ethereum.on('chainChanged', (chain:number)=>chainChange())
         return () => {
             window.ethereum.removeListener('accountsChanged', detectProvider)
+            window.ethereum.removeListener('chainChanged', chainChange)
         }
     }, [])
 
-    return { isConnected, provider, signer, account, ethers, connect }
+    return { isConnected, provider, signer, account, ethers, connect , chainId}
 }
 
 export default useWeb3
