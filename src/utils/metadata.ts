@@ -15,10 +15,15 @@ export const supportedContracts = [
     '0x4Da9Ea3ba93587c65f05ee093a49F2A3fC9e9602',
     '0xc0dED6D98FecAF686Ec02240D649FC8E068E5169'
 ]
-
+//https://ipfs.infura.io/ipfs/QmSthRoasyxCFuzmtVj5kn2J6fipvUfqk3k2mEw4SN5hzL/1.json
 export const loadMetadata = async ({ item, contract, marketplace }: Props): Promise<MetadataType> => {
     try {
-        const uri = await contract.tokenURI(item.tokenId);
+        const fastestGateway = 'https://storry.tv'
+        let uri = await contract.tokenURI(item.tokenId);
+        const  indexIpfs = uri.indexOf('/ipfs/') 
+        if (indexIpfs !== -1) uri = fastestGateway + uri.substring(uri.indexOf('/ipfs/'))
+        // const uri = fastestGateway + tokenURI.substring(tokenURI.indexOf('/ipfs/'));
+        
         const response = await fetch(uri)
         const metadata = await response.json()
         const totalPrice = item.itemId ? await marketplace.getTotalPrice(item.itemId) : 0
@@ -37,11 +42,11 @@ export const loadMetadata = async ({ item, contract, marketplace }: Props): Prom
             contract: contract.address
         }
     } catch (err) {
-        console.log('data start')
-        console.log('token id:', item.tokenId)
-        console.log('contract name', await contract.name())
-        console.log('contract address', contract.address)
-        console.log('data end', err)
+        // console.log('data start')
+        // console.log('token id:', item.tokenId)
+        // console.log('contract name', await contract.name())
+        // console.log('contract address', contract.address)
+        // console.log('data end', err)
         return {} as Promise<MetadataType>
     }
 

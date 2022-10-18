@@ -37,9 +37,6 @@ export default ({ marketplace, account, signer, myListedItems, loadListedItems }
             await newListing({item, contract, marketplace, account, price}),
             await loadListedItems(marketplace)
         ])
-        
-        
-        
     }
 
     const loadOwnedNFTs = async () => {

@@ -7,7 +7,7 @@ import { approvalForAll } from "../../src/utils/productActions";
 import { ComponentProps } from "../../src/types";
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0' as Options)
 
-
+// dweb.link
 
 const Create = ({marketplace, nft, account} : ComponentProps) =>{
 
