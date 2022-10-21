@@ -15,24 +15,20 @@ export const supportedContracts = [
     '0x4Da9Ea3ba93587c65f05ee093a49F2A3fC9e9602',
     '0xc0dED6D98FecAF686Ec02240D649FC8E068E5169'
 ]
+
 const getFastestGateWay = (url : string) =>{
     // const fastestGateway = 'https://storry.tv'
     const fastestGateway = 'https://cf-ipfs.com'
     const indexIpfs = url.indexOf('/ipfs/') 
     let fastestURL = url
     if (indexIpfs !== -1) fastestURL = fastestGateway + url.substring(url.indexOf('/ipfs/'))
-    console.log(`url: ${url} fastest:${fastestURL}`);
+    // console.log(`url: ${url} fastest:${fastestURL}`);
     return fastestURL
 }
 
 export const loadMetadata = async ({ item, contract, marketplace }: Props): Promise<MetadataType> => {
     try {
-        // const fastestGateway = 'https://storry.tv'
-        // const fastestGateway = 'https://cf-ipfs.com'
         let uri = getFastestGateWay(await contract.tokenURI(item.tokenId))
-        // const  indexIpfs = uri.indexOf('/ipfs/') 
-        // if (indexIpfs !== -1) uri = fastestGateway + uri.substring(uri.indexOf('/ipfs/'))
-        // const uri = fastestGateway + tokenURI.substring(tokenURI.indexOf('/ipfs/')); 
         
         const response = await fetch(uri)
         const metadata = await response.json()

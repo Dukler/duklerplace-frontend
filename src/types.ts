@@ -40,7 +40,8 @@ export type MetadataType = {
     attributes?: Array<{trait_type:string,value:string}> | undefined,
     contract: string,
     nft?:string,
-    state?: MarketItemState
+    state?: MarketItemState,
+    isOwner?: boolean
 }
 
 

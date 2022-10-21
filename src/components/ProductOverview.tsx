@@ -58,9 +58,8 @@ export default function ProductOverview({product} : {product:MetadataProduct}) {
               </div>
 
               {/* Attributes */}
-              <section aria-labelledby="policies-heading" className="mt-10">
+              {product.attributes?.length > 0 ? <section aria-labelledby="attributes-heading" className="mt-10">
                 <h2 className="text-sm font-medium text-gray-900 m-1 mb-4">Attributes</h2>
-
                 <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                   {product.attributes?.map((att) => (
                     <div key={att.trait_type} className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
@@ -71,8 +70,8 @@ export default function ProductOverview({product} : {product:MetadataProduct}) {
                       <dd className="mt-1 text-sm text-gray-500">{att.value}</dd>
                     </div>
                   ))}
-                </dl>
-              </section>
+                </dl> 
+              </section> : null}
             </div>
           </div>
         </div>

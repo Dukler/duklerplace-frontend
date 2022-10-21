@@ -9,7 +9,7 @@ import { loadMetadata } from '../src/utils/metadata';
 
 
 
-const Home: NextPage<ComponentProps> = ({ marketplace, signer }) => {
+const Home: NextPage<ComponentProps> = ({ marketplace, signer, account }) => {
   const [items, setItems] = useState<Array<MetadataType>>([])
   const [loading, setLoading] = useState<boolean>(true)
   
@@ -26,10 +26,18 @@ const Home: NextPage<ComponentProps> = ({ marketplace, signer }) => {
     let items:Array<MetadataType> = [];
     for (let index = 1; index <= itemCount; index++) {
       const item = await marketplace.items(index)
+      // const item = await loadMetadata({ item: auxItem ? auxItem : { tokenId }, contract, marketplace })
+      // const isListed = auxItem?.state === MarketItemState.Listed ? true : false;
+      // const owner = isListed ? auxItem.seller : await contract.ownerOf(tokenId);
+      // const isOwner = owner === account;
       if (item.state === MarketItemState.Listed) {
         const contract = new ethers.Contract(item.nft, ERC721.abi, signer)
+        const metadata = await loadMetadata({item,contract,marketplace});
+        const isListed = item?.state === MarketItemState.Listed ? true : false;
+        const owner = isListed ? item.seller : await contract.ownerOf(item.tokenId);
+        const isOwner = owner === account;
         items.push(
-          await loadMetadata({item,contract,marketplace})
+          {...metadata, isOwner}
         )
       }
     }
@@ -46,7 +54,7 @@ const Home: NextPage<ComponentProps> = ({ marketplace, signer }) => {
 
   useEffect(() => {
     loadMarketplaceItems()
-  }, [])
+  }, [account])
 
   if (loading) return (
     <main className='p-1'>

@@ -1,15 +1,35 @@
-import { ChangeEvent, SyntheticEvent } from "react";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { ethers } from "ethers";
-import {create as ipfsHttpClient, Options} from 'ipfs-http-client';
 import UploadForm from "../../src/components/UploadForm";
 import useComplexState from "../../src/hooks/useComplexState";
 import { approvalForAll } from "../../src/utils/productActions";
 import { ComponentProps } from "../../src/types";
-const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0' as Options)
+import * as IPFSCORE from 'ipfs-core'
+// import('ipfs-core-types').IPFS IPFS
+// import * as asd from 'ipfs-core-types'
+// import type { IPFS as IPFSType } from 'ipfs-core-types'
+
+type IPFSType = Awaited<ReturnType<typeof IPFSCORE.create>>
+const client = await IPFSCORE.create()
+
+
+
+
+// const client = ipfsHttpClient('https://infura-ipfs.io:5001/api/v0' as Options)
 
 // dweb.link
 
 const Create = ({marketplace, nft, account} : ComponentProps) =>{
+    // const [client, setClient] = useState<IPFSType>({} as IPFSType)
+    
+    // useEffect(()=>{
+    //     // prepareClient().then(res=>setClient(res))
+    //     const getClient = async () =>{
+    //         setClient(await IPFSCORE.create())
+    //     }
+    //     getClient();
+    // },[])
+    
 
     const [state, setAttribute] = useComplexState<{image:string,price:number|'',name:string,description:string}>({image:'',price:'',name:'',description:''})
 
@@ -26,7 +46,7 @@ const Create = ({marketplace, nft, account} : ComponentProps) =>{
         try{
             const result = await client.add(file)
             console.log(result)
-            setAttribute('image',`https://ipfs.infura.io/ipfs/${result.path}`)
+            setAttribute('image',`https://infura-ipfs.io/ipfs/${result.path}`)
         }catch(error){
             console.log("ipfs image upload error: ", error)
         }
@@ -44,7 +64,7 @@ const Create = ({marketplace, nft, account} : ComponentProps) =>{
         }
     }
     const mintThenList = async (result:{path:string}) =>{
-        const uri = `https://ipfs.infura.io/ipfs/${result.path}`
+        const uri = `https://infura-ipfs.io/ipfs/${result.path}`
         await (await nft.mint(uri)).wait()
         const id = await nft.totalSupply()
         // await (await nft.setApprovalForAll(marketplace.address, true)).wait()
