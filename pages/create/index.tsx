@@ -5,21 +5,14 @@ import useComplexState from "../../src/hooks/useComplexState";
 import { approvalForAll } from "../../src/utils/productActions";
 import { ComponentProps } from "../../src/types";
 import * as IPFSCORE from 'ipfs-core'
-// import('ipfs-core-types').IPFS IPFS
-// import * as asd from 'ipfs-core-types'
-// import type { IPFS as IPFSType } from 'ipfs-core-types'
 
 type IPFSType = Awaited<ReturnType<typeof IPFSCORE.create>>
-const client = await IPFSCORE.create()
+type Props = ComponentProps & {
+    IPFS: IPFSType
+}
 
-
-
-
-// const client = ipfsHttpClient('https://infura-ipfs.io:5001/api/v0' as Options)
-
-// dweb.link
-
-const Create = ({marketplace, nft, account} : ComponentProps) =>{
+const Create = ({marketplace, nft, account, IPFS} : Props) =>{
+    const client = IPFS;
     // const [client, setClient] = useState<IPFSType>({} as IPFSType)
     
     // useEffect(()=>{

@@ -11,7 +11,11 @@ import { ethers } from 'ethers';
 import { MarketPlaceItem, MarketPlaceItemsByContract } from '../src/types';
 import { MarketItemState } from '../src/constants';
 import NetworkModal from '../src/components/NetworkModal';
-import Script from 'next/script';
+
+import * as IPFSCORE from 'ipfs-core'
+
+
+const IPFS = await IPFSCORE.create()
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { isConnected, connect, ethers, signer, account, chainId } = useWeb3();
@@ -68,12 +72,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return <Layout web3Handler={connect} account={account}> {!loading ?
     <>
-        <Script
-          src="https://cdn.jsdelivr.net/npm/ipfs-core/dist/index.min.js"
-          strategy="beforeInteractive"
-        ></Script>
       <NetworkModal chainId={chainId}/>
-      <Component {...pageProps} {...blockchainProps} />
+      <Component {...pageProps} {...blockchainProps} IPFS={IPFS} />
     </>
     : null} </Layout>
 }
