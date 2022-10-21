@@ -9,4 +9,4 @@ This marketplace can mint its' own NFT tokens in the Goerli Testnet and hosts an
 
 ## How to use
 
-Execute [npm](https://docs.npmjs.com/cli/init) run dev, 
+Download this code and execute [npm](https://docs.npmjs.com/cli/init) run dev.
