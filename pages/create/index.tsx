@@ -4,9 +4,9 @@ import UploadForm from "../../src/components/UploadForm";
 import useComplexState from "../../src/hooks/useComplexState";
 import { approvalForAll } from "../../src/utils/productActions";
 import { ComponentProps } from "../../src/types";
-import * as IPFSCORE from 'ipfs-core'
+import ipfsclient from "../../src/components/ipfsclient";
 
-import { create as ipfsHttpClient, Options } from "ipfs-http-client";
+// import { create as ipfsHttpClient, Options } from "ipfs-http-client";
 // const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0" as Options);
 // const client = ipfsHttpClient("https://ipfs-gateway.cloud/" as Options);
 
@@ -14,7 +14,8 @@ import { create as ipfsHttpClient, Options } from "ipfs-http-client";
 // type IPFSType = Awaited<ReturnType<typeof IPFSCORE.create>>
 
 const Create = ({marketplace, nft, account} : ComponentProps) =>{
-    const client = {add:(file:any)=>{return{path:''}}}
+    // const client = {add:(file:any)=>{return{path:''}}}
+    const client = ipfsclient;
     // const [client, setClient] = useState<IPFSType>({} as IPFSType)
     
     // useEffect(()=>{
