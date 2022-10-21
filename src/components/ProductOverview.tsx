@@ -58,7 +58,7 @@ export default function ProductOverview({product} : {product:MetadataProduct}) {
               </div>
 
               {/* Attributes */}
-              {product.attributes?.length > 0 ? <section aria-labelledby="attributes-heading" className="mt-10">
+              {product.attributes?.length || 0 > 0 ? <section aria-labelledby="attributes-heading" className="mt-10">
                 <h2 className="text-sm font-medium text-gray-900 m-1 mb-4">Attributes</h2>
                 <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                   {product.attributes?.map((att) => (
