@@ -6,13 +6,15 @@ import { approvalForAll } from "../../src/utils/productActions";
 import { ComponentProps } from "../../src/types";
 import * as IPFSCORE from 'ipfs-core'
 
-type IPFSType = Awaited<ReturnType<typeof IPFSCORE.create>>
-type Props = ComponentProps & {
-    IPFS: IPFSType
-}
+import { create as ipfsHttpClient, Options } from "ipfs-http-client";
+// const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0" as Options);
+// const client = ipfsHttpClient("https://ipfs-gateway.cloud/" as Options);
 
-const Create = ({marketplace, nft, account, IPFS} : Props) =>{
-    const client = IPFS;
+// const client = await IPFSCORE.create()
+// type IPFSType = Awaited<ReturnType<typeof IPFSCORE.create>>
+
+const Create = ({marketplace, nft, account} : ComponentProps) =>{
+    const client = {add:(file:any)=>{return{path:''}}}
     // const [client, setClient] = useState<IPFSType>({} as IPFSType)
     
     // useEffect(()=>{
